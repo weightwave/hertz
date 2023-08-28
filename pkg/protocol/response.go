@@ -42,6 +42,7 @@
 package protocol
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"io"
 	"net"
 	"sync"
@@ -287,6 +288,7 @@ func (resp *Response) resetSkipHeader() {
 // ResetBody resets response body.
 func (resp *Response) ResetBody() {
 	resp.bodyRaw = nil
+	hlog.Warn("########## server try to close resp body stream")
 	resp.CloseBodyStream() //nolint:errcheck
 	if resp.body != nil {
 		if resp.body.Len() <= resp.maxKeepBodySize {
@@ -370,7 +372,10 @@ func (resp *Response) CloseBodyStream() error {
 	}
 	var err error
 	if bsc, ok := resp.bodyStream.(io.Closer); ok {
+		hlog.Warn("########## server resp body is a io.Closer, try .Close()")
 		err = bsc.Close()
+	} else {
+		hlog.Warn("########## server resp body is not a io.Closer, type: %T", resp.bodyStream)
 	}
 	resp.bodyStream = nil
 	return err

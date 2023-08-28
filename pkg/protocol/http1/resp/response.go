@@ -143,6 +143,7 @@ func (c *clientRespStream) Close() (err error) {
 		hlog.Warnf("connection will be closed instead of recycled because an error occurred during the stream body release: %s", err.Error())
 	}
 	if c.closeCallback != nil {
+		hlog.Warn("########## clientRespStream try to closeCallback with should close: %t", shouldClose)
 		err = c.closeCallback(shouldClose)
 	}
 	c.reset()
@@ -233,6 +234,7 @@ func Write(resp *protocol.Response, w network.Writer) error {
 	sendBody := !resp.MustSkipBody()
 
 	if resp.IsBodyStream() {
+		hlog.Warn("########## server start write body stream")
 		return writeBodyStream(resp, w, sendBody)
 	}
 
@@ -300,6 +302,7 @@ func writeBodyStream(resp *protocol.Response, w network.Writer, sendBody bool) (
 			}
 		}
 	}
+	hlog.Warn("########## server finish write body stream, try to CloseBodyStream")
 	err1 := resp.CloseBodyStream()
 	if err == nil {
 		err = err1
