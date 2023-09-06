@@ -17,7 +17,9 @@
 package standard
 
 import (
+	"context"
 	"crypto/tls"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"net"
 	"time"
 
@@ -27,6 +29,7 @@ import (
 type dialer struct{}
 
 func (d *dialer) DialConnection(n, address string, timeout time.Duration, tlsConfig *tls.Config) (conn network.Conn, err error) {
+	hlog.CtxInfof(context.Background(), "network = %s,address = %s,timeout = %s", n, address, timeout.String())
 	c, err := net.DialTimeout(n, address, timeout)
 	if tlsConfig != nil {
 		cTLS := tls.Client(c, tlsConfig)
@@ -38,6 +41,7 @@ func (d *dialer) DialConnection(n, address string, timeout time.Duration, tlsCon
 }
 
 func (d *dialer) DialTimeout(network, address string, timeout time.Duration, tlsConfig *tls.Config) (conn net.Conn, err error) {
+	hlog.CtxInfof(context.Background(), "network = %s,address = %s,timeout = %s", network, address, timeout.String())
 	conn, err = net.DialTimeout(network, address, timeout)
 	return
 }
