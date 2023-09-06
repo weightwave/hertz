@@ -289,19 +289,19 @@ func ContinueReadBodyStream(req *protocol.Request, zr network.Reader, maxBodySiz
 	if err != nil {
 		if errors.Is(err, errs.ErrBodyTooLarge) {
 			req.Header.SetContentLength(contentLength)
-			req.ConstructBodyStream(bodyBuf, ext.AcquireBodyStream(bodyBuf, zr, req.Header.Trailer(), contentLength))
+			req.ConstructBodyStream(bodyBuf, ext.AcquireBodyStream(bodyBuf, zr, req.Header.Trailer(), contentLength, ""))
 
 			return nil
 		}
 		if errors.Is(err, errs.ErrChunkedStream) {
-			req.ConstructBodyStream(bodyBuf, ext.AcquireBodyStream(bodyBuf, zr, req.Header.Trailer(), contentLength))
+			req.ConstructBodyStream(bodyBuf, ext.AcquireBodyStream(bodyBuf, zr, req.Header.Trailer(), contentLength, ""))
 			return nil
 		}
 		req.Reset()
 		return err
 	}
 
-	req.ConstructBodyStream(bodyBuf, ext.AcquireBodyStream(bodyBuf, zr, req.Header.Trailer(), contentLength))
+	req.ConstructBodyStream(bodyBuf, ext.AcquireBodyStream(bodyBuf, zr, req.Header.Trailer(), contentLength, ""))
 	return nil
 }
 

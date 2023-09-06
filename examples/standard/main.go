@@ -19,6 +19,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/cloudwego/hertz/pkg/app/client"
+	"github.com/cloudwego/hertz/pkg/protocol"
+	"strconv"
+	"time"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
@@ -35,7 +39,11 @@ func main() {
 	h := server.Default()
 	h.StaticFS("/", &app.FS{Root: "./", GenerateIndexPages: true})
 
-	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
+	count := 0
+
+	h.POST("/ping", func(c context.Context, ctx *app.RequestContext) {
+		ctx.Response.Header.Set("X-Tt-Logid", strconv.Itoa(count))
+		count++
 		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
 	})
 
@@ -56,6 +64,26 @@ func main() {
 			fmt.Fprintf(ctx, "Hi %s, this is the response from Hertz.\n", ctx.Param("name"))
 		})
 	}
+
+	go func() {
+		cli, _ := client.NewClient(client.WithResponseBodyStream(true))
+		time.Sleep(2 * time.Second)
+		for i := 0; i < 500; i++ {
+			req := protocol.AcquireRequest()
+			resp := protocol.AcquireResponse()
+			req.SetMethod(consts.MethodPost)
+			req.SetRequestURI("http://127.0.0.1:8888/ping")
+			err := cli.Do(context.Background(), req, resp)
+			if err != nil {
+				fmt.Println("error:" + err.Error())
+				return
+			}
+			fmt.Println(resp.StatusCode())
+			resp.Reset()
+			time.Sleep(200 * time.Millisecond)
+		}
+
+	}()
 
 	h.Spin()
 }

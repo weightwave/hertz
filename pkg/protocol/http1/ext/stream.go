@@ -43,8 +43,10 @@ package ext
 
 import (
 	"bytes"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"io"
 	"sync"
+	"time"
 
 	"github.com/cloudwego/hertz/internal/bytestr"
 	"github.com/cloudwego/hertz/pkg/common/bytebufferpool"
@@ -62,12 +64,15 @@ var (
 			return &bodyStream{}
 		},
 	}
+
+	LogIDBook = sync.Map{}
 )
 
 // Deprecated: Use github.com/cloudwego/hertz/pkg/protocol.NoBody instead.
 var NoBody = protocol.NoBody
 
 type bodyStream struct {
+	LogID           string
 	prefetchedBytes *bytes.Reader
 	reader          network.Reader
 	trailer         *protocol.Trailer
@@ -76,6 +81,24 @@ type bodyStream struct {
 	chunkLeft       int
 	// whether the chunk has reached the EOF
 	chunkEOF bool
+}
+
+func init() {
+	go func() {
+		for true {
+			time.Sleep(5 * time.Second)
+			count := 0
+			logIDList := make([]string, 0)
+			LogIDBook.Range(func(key, value interface{}) bool {
+				if value == 1 {
+					count++
+					logIDList = append(logIDList, key.(string))
+				}
+				return true
+			})
+			hlog.SystemLogger().Warnf("!########### There are %d logIDs that do not release reader: %v", count, logIDList)
+		}
+	}()
 }
 
 func ReadBodyWithStreaming(zr network.Reader, contentLength, maxBodySize int, dst []byte) (b []byte, err error) {
@@ -111,13 +134,18 @@ func ReadBodyWithStreaming(zr network.Reader, contentLength, maxBodySize int, ds
 	return b, nil
 }
 
-func AcquireBodyStream(b *bytebufferpool.ByteBuffer, r network.Reader, t *protocol.Trailer, contentLength int) io.Reader {
+func AcquireBodyStream(b *bytebufferpool.ByteBuffer, r network.Reader, t *protocol.Trailer, contentLength int, logID string) io.Reader {
 	rs := bodyStreamPool.Get().(*bodyStream)
 	rs.prefetchedBytes = bytes.NewReader(b.B)
 	rs.reader = r
 	rs.contentLength = contentLength
 	rs.trailer = t
 	rs.chunkEOF = false
+	rs.LogID = logID
+	LogIDBook.Store(logID, 1)
+	if logID == "" {
+		hlog.SystemLogger().Warn("!########### body reader encounter a response that has a nil logID")
+	}
 
 	return rs
 }
@@ -314,6 +342,7 @@ func (rs *bodyStream) skipRest() error {
 // NOTE: Be careful to use this method unless you know what it's for.
 func ReleaseBodyStream(requestReader io.Reader) (err error) {
 	if rs, ok := requestReader.(*bodyStream); ok {
+		LogIDBook.Delete(rs.LogID)
 		err = rs.skipRest()
 		rs.reset()
 		bodyStreamPool.Put(rs)
