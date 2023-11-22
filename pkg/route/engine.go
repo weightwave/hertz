@@ -510,6 +510,7 @@ func (engine *Engine) Serve(c context.Context, conn network.Conn) (err error) {
 		// protocol sniffer
 		buf, _ := conn.Peek(len(bytestr.StrClientPreface))
 		if bytes.Equal(buf, bytestr.StrClientPreface) && engine.protocolServers[suite.HTTP2] != nil {
+			hlog.Warnf("use h2c to serve")
 			return engine.protocolServers[suite.HTTP2].Serve(c, conn)
 		}
 		hlog.SystemLogger().Warn("HTTP2 server is not loaded, request is going to fallback to HTTP1 server")
@@ -530,14 +531,16 @@ func (engine *Engine) Serve(c context.Context, conn network.Conn) (err error) {
 			}
 			return err1
 		}
+		hlog.Warnf("use alpn: %s", proto)
 		if server, ok := engine.protocolServers[proto]; ok {
 			return server.Serve(c, conn)
 		}
 	}
 
+	hlog.Warnf("use http1 serve, err: %v", err)
 	// HTTP1 path
 	err = engine.protocolServers[suite.HTTP1].Serve(c, conn)
-
+	hlog.Warnf("after h1 serve, err: %v", err)
 	return
 }
 
