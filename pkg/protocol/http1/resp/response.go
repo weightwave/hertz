@@ -306,6 +306,7 @@ func writeBodyStream(resp *protocol.Response, w network.Writer, sendBody bool) (
 	err1 := resp.CloseBodyStream()
 	if err == nil {
 		err = err1
+		hlog.Warnf("close bodystream err: %v", err)
 	}
 	return err
 }
