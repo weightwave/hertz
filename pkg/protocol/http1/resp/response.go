@@ -233,6 +233,7 @@ func Write(resp *protocol.Response, w network.Writer) error {
 	sendBody := !resp.MustSkipBody()
 
 	if resp.IsBodyStream() {
+		hlog.Warnf("write bodystream")
 		return writeBodyStream(resp, w, sendBody)
 	}
 
@@ -244,6 +245,7 @@ func Write(resp *protocol.Response, w network.Writer) error {
 
 	header := resp.Header.Header()
 	_, err := w.WriteBinary(header)
+	hlog.Warnf("write binary 1 err: %v", err)
 	if err != nil {
 		return err
 	}
@@ -251,6 +253,7 @@ func Write(resp *protocol.Response, w network.Writer) error {
 	// Write body
 	if sendBody && bodyLen > 0 {
 		_, err = w.WriteBinary(body)
+		hlog.Warnf("write binary 2 err: %v", err)
 	}
 	return err
 }
