@@ -20,6 +20,7 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"io"
 	"net"
 	"sync"
@@ -161,6 +162,7 @@ func (s Server) Serve(c context.Context, conn network.Conn) (err error) {
 			ctx.GetConn().SetReadTimeout(s.IdleTimeout) //nolint:errcheck
 
 			_, err = zr.Peek(4)
+			hlog.Warnf("peek err: %v", err)
 			// This is not the first request, and we haven't read a single byte
 			// of a new request yet. This means it's just a keep-alive connection
 			// closing down either because the remote closed it or because
@@ -168,6 +170,7 @@ func (s Server) Serve(c context.Context, conn network.Conn) (err error) {
 			// and don't return any error response.
 			if err != nil {
 				err = errIdleTimeout
+				hlog.Warnf("idletimeout err: %v", err)
 				return
 			}
 
@@ -182,15 +185,6 @@ func (s Server) Serve(c context.Context, conn network.Conn) (err error) {
 				internalStats.Record(ti, stats.ReadHeaderFinish, err)
 			})
 		}
-
-		ctx.Response.Header.SetNoDefaultDate(s.NoDefaultDate)
-		ctx.Response.Header.SetNoDefaultContentType(s.NoDefaultContentType)
-
-		if s.DisableHeaderNamesNormalizing {
-			ctx.Request.Header.DisableNormalizing()
-			ctx.Response.Header.DisableNormalizing()
-		}
-
 		// Read Headers
 		if err = req.ReadHeader(&ctx.Request.Header, zr); err == nil {
 			if s.EnableTrace {
@@ -209,6 +203,10 @@ func (s Server) Serve(c context.Context, conn network.Conn) (err error) {
 			} else {
 				err = req.ReadLimitBody(&ctx.Request, zr, s.MaxRequestBodySize, s.GetOnly, !s.DisablePreParseMultipartForm)
 			}
+			hlog.Warnf("read body err: %v", err)
+		} else {
+			hlog.Warnf("read header err: %v", err)
+
 		}
 
 		if s.EnableTrace {
@@ -249,10 +247,12 @@ func (s Server) Serve(c context.Context, conn network.Conn) (err error) {
 				zw = ctx.GetWriter()
 				// Send 'HTTP/1.1 100 Continue' response.
 				_, err = zw.WriteBinary(bytestr.StrResponseContinue)
+				hlog.Warnf("write err: %v", err)
 				if err != nil {
 					return
 				}
 				err = zw.Flush()
+				hlog.Warnf("flush err: %v", err)
 				if err != nil {
 					return
 				}
@@ -267,6 +267,7 @@ func (s Server) Serve(c context.Context, conn network.Conn) (err error) {
 					err = req.ContinueReadBody(&ctx.Request, zr, s.MaxRequestBodySize, !s.DisablePreParseMultipartForm)
 				}
 				if err != nil {
+					hlog.Warnf("StreamRequestBody err: %v", err)
 					writeErrorResponse(zw, ctx, serverName, err)
 					return
 				}
@@ -326,6 +327,7 @@ func (s Server) Serve(c context.Context, conn network.Conn) (err error) {
 			})
 		}
 		if err = writeResponse(ctx, zw); err != nil {
+			hlog.Warnf("writeResponse err: %v", err)
 			return
 		}
 
@@ -344,6 +346,7 @@ func (s Server) Serve(c context.Context, conn network.Conn) (err error) {
 		}
 		// Flush the response.
 		if err = zw.Flush(); err != nil {
+			hlog.Warnf("Flush111 err: %v", err)
 			return
 		}
 		if s.EnableTrace {
@@ -357,6 +360,7 @@ func (s Server) Serve(c context.Context, conn network.Conn) (err error) {
 		if ctx.Request.IsBodyStream() {
 			err = ext.ReleaseBodyStream(ctx.RequestBodyStream())
 			if err != nil {
+				hlog.Warnf("ReleaseBodyStream err: %v", err)
 				return
 			}
 		}
