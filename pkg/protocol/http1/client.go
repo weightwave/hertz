@@ -46,6 +46,7 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
+	"fmt"
 	"io"
 	"net"
 	"strings"
@@ -545,7 +546,7 @@ func (c *HostClient) doNonNilReqResp(req *protocol.Request, resp *protocol.Respo
 	cc, inPool, err := c.acquireConn(dialTimeout)
 	// if getting connection error, fast fail
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("[Hertz] acquiring connection err: %v", err)
 	}
 	conn := cc.c
 
@@ -600,6 +601,7 @@ func (c *HostClient) doNonNilReqResp(req *protocol.Request, resp *protocol.Respo
 		errNorm, ok := conn.(network.ErrorNormalization)
 		if ok {
 			err = errNorm.ToHertzError(err)
+			err = fmt.Errorf("[Hertz] write error: %v", err)
 		}
 
 		if !errors.Is(err, errs.ErrConnectionClosed) {
@@ -668,6 +670,7 @@ func (c *HostClient) doNonNilReqResp(req *protocol.Request, resp *protocol.Respo
 		if ok {
 			err = errNorm.ToHertzError(err)
 		}
+		err = fmt.Errorf("[Hertz] read err: %v", err)
 		return false, err
 	}
 
