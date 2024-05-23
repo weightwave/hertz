@@ -563,6 +563,7 @@ func (c *HostClient) doNonNilReqResp(req *protocol.Request, resp *protocol.Respo
 		return false, errTimeout
 	}
 
+	hlog.Infof("client set writetimeout: %v", timeout)
 	if err = conn.SetWriteTimeout(timeout); err != nil {
 		c.closeConn(cc)
 		// try another connection if retry is enabled
