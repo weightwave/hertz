@@ -434,6 +434,7 @@ func (c *HostClient) doNonNilReqResp(req *protocol.Request, resp *protocol.Respo
 	if err != nil {
 		return false, err
 	}
+	hlog.Infof("host: %s, remote address: %s", req.Host(), cc.c.RemoteAddr().String())
 	conn := cc.c
 
 	usingProxy := false
