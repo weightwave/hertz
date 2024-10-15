@@ -46,6 +46,7 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
+	"fmt"
 	"io"
 	"net"
 	"strings"
@@ -133,6 +134,20 @@ func (c *HostClient) SetDynamicConfig(dc *client.DynamicConfig) {
 	c.Addr = dc.Addr
 	c.ProxyURI = dc.ProxyURI
 	c.IsTLS = dc.IsTLS
+
+	go func() {
+		t := time.NewTicker(2 * time.Second)
+		for {
+			select {
+			case <-c.closed:
+				return
+			case <-t.C:
+				connState := c.ConnPoolState()
+				hlog.Infof("[CONN-STATE] Host: %s, Total connection: %d, Total waiting connection: %d, Total conn pool: %d",
+					connState.Addr, connState.TotalConnNum, connState.WaitConnNum, connState.PoolConnNum)
+			}
+		}
+	}()
 
 	// start observation after setting addr to avoid race
 	if c.StateObserve != nil {
@@ -761,7 +776,7 @@ func (c *HostClient) acquireConn(dialTimeout time.Duration) (cc *clientConn, inP
 	}
 	if !createConn {
 		if c.MaxConnWaitTimeout <= 0 {
-			return nil, true, errs.ErrNoFreeConns
+			return nil, true, errors.New(fmt.Sprintf("no free connections available to host(Addr): %v, addr:%v", c.Addr, c.addrs))
 		}
 
 		timeout := c.MaxConnWaitTimeout
@@ -790,7 +805,7 @@ func (c *HostClient) acquireConn(dialTimeout time.Duration) (cc *clientConn, inP
 		case <-w.ready:
 			return w.conn, true, w.err
 		case <-tc.C:
-			return nil, true, errs.ErrNoFreeConns
+			return nil, true, errors.New(fmt.Sprintf("no free connections available to host(Addr): %v, addr:%v", c.Addr, c.addrs))
 		}
 	}
 
