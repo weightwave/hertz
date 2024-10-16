@@ -697,8 +697,10 @@ func (c *HostClient) doNonNilReqResp(req *protocol.Request, resp *protocol.Respo
 	} else {
 		err = respI.ReadBodyStream(resp, zr, c.MaxResponseBodySize, func(shouldClose bool) error {
 			if shouldCloseConn || shouldClose {
+				hlog.Warnf("[RELEASE] close conn for %s", c.Addr)
 				c.closeConn(cc)
 			} else {
+				hlog.Warnf("[RELEASE] release conn for %s", c.Addr)
 				c.releaseConn(cc)
 			}
 			return nil
