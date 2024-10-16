@@ -133,6 +133,7 @@ type clientRespStream struct {
 }
 
 func (c *clientRespStream) Close() (err error) {
+	hlog.Warnf("[STREAMCLOSE] close conn")
 	runtime.SetFinalizer(c, nil)
 	// If error happened in release, the connection may be in abnormal state.
 	// Close it in the callback in order to avoid other unexpected problems.
