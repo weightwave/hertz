@@ -65,8 +65,8 @@ package {{.PackageName}}
 import (
 	"context"
 
-	"github.com/weightwave/hertz/pkg/app"
-	"github.com/weightwave/hertz/pkg/protocol/consts"
+	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/protocol/consts"
 
 {{- range $k, $v := .Imports}}
 	{{$k}} "{{$v.Package}}"
@@ -100,7 +100,7 @@ func {{$MethodInfo.Name}}(ctx context.Context, c *app.RequestContext) {
 package {{$.PackageName}}
 
 import (
-	"github.com/weightwave/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/app/server"
 
     {{- range $k, $v := .HandlerPackages}}
         {{$k}} "{{$v}}"
@@ -149,7 +149,7 @@ func Register(r *server.Hertz) {
 package {{.PackageName}}
 
 import (
-	"github.com/weightwave/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/app/server"
 	{{$.DepPkgAlias}} "{{$.DepPkg}}"
 )
 
@@ -173,7 +173,7 @@ func GeneratedRegister(r *server.Hertz){
 package {{$.PackageName}}
 
 import (
-	"github.com/weightwave/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/app"
 )
 
 {{define "M"}}
@@ -204,8 +204,8 @@ func {{.HandlerMiddleware}}Mw() []app.HandlerFunc {
 package {{$.PackageName}}
 
 import (
-    "github.com/weightwave/hertz/pkg/app/client"
-	"github.com/weightwave/hertz/pkg/common/config"
+    "github.com/cloudwego/hertz/pkg/app/client"
+	"github.com/cloudwego/hertz/pkg/common/config"
 )
 
 type {{.ServiceName}}Client struct {
@@ -284,11 +284,11 @@ import (
 	"regexp"
 	"strings"
 
-	hertz_client "github.com/weightwave/hertz/pkg/app/client"
-	"github.com/weightwave/hertz/pkg/common/config"
-	"github.com/weightwave/hertz/pkg/common/errors"
-	"github.com/weightwave/hertz/pkg/protocol"
-	"github.com/weightwave/hertz/pkg/protocol/client"
+	hertz_client "github.com/cloudwego/hertz/pkg/app/client"
+	"github.com/cloudwego/hertz/pkg/common/config"
+	"github.com/cloudwego/hertz/pkg/common/errors"
+	"github.com/cloudwego/hertz/pkg/protocol"
+	"github.com/cloudwego/hertz/pkg/protocol/client"
 )
 
 type use interface {
