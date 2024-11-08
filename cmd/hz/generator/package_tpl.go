@@ -975,10 +975,18 @@ func (s *{{$.ServiceName}}Client) {{$MethodInfo.Name}}(context context.Context, 
 }
 {{end}}
 
-var defaultClient, _ = New{{.ServiceName}}Client("{{.BaseDomain}}-"+envs.GetEnv())
+var defaultClient Client
+var once sync.Once
+
+func Init(){
+	once.Do(func() {
+		defaultClient, _ = New{{.ServiceName}}Client("http://{{.BaseDomain}}-"+envs.GetEnv())
+	})
+}
 
 {{range $_, $MethodInfo := .ClientMethods}}
 func {{$MethodInfo.Name}}(context context.Context, req *{{$MethodInfo.RequestTypeName}}, reqOpt ...config.RequestOption) (resp *{{$MethodInfo.ReturnTypeName}}, rawResponse *protocol.Response, err error) {
+	Init()
 	return defaultClient.{{$MethodInfo.Name}}(context, req, reqOpt...)
 }
 {{end}}
