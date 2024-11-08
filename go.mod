@@ -49,6 +49,7 @@ require (
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/urfave/cli/v2 v2.23.0 // indirect
+	github.com/weightwave/hertz/cmd/hz v0.0.0-20241108120930-4d4b10be1ac6 // indirect
 	github.com/weightwave/hertz/cmd/v2/hz v0.0.0-20241108115426-1fbaf51fac11 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect

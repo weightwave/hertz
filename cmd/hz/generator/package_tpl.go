@@ -892,9 +892,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/weightwave/hertz/pkg/app/middlewares/client/sd"
-	"github.com/weightwave/hertz/pkg/common/config"
-	"github.com/weightwave/hertz/pkg/protocol"
+	"github.com/cloudwego/hertz/pkg/app/middlewares/client/sd"
+	"github.com/cloudwego/hertz/pkg/common/config"
+	"github.com/cloudwego/hertz/pkg/protocol"
 	hertztracing "github.com/hertz-contrib/obs-opentelemetry/tracing"
 	"github.com/weightwave/gocommon/nacosclient"
 	"github.com/weightwave/gocommon/envs"
