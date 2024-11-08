@@ -91,10 +91,10 @@ func {{$MethodInfo.Name}}(ctx context.Context, c *app.RequestContext) {
 	}
 	{{end}}
 
-	//请在这里实现参数检查 TODO params check
-	var resp {{$MethodInfo.ReturnTypeName}}
+	//TODO params check
 
-	//resp, err = service.{{$MethodInfo.Name}}(ctx, req)
+	var resp *{{$MethodInfo.ReturnTypeName}}
+	resp, err = service.{{$MethodInfo.Name}}(ctx, req)
 
 	c.{{.Serializer}}(consts.StatusOK, resp)
 }
