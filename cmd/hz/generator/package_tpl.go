@@ -83,7 +83,7 @@ func {{$MethodInfo.Name}}(ctx context.Context, c *app.RequestContext) {
 		if err != nil {
 			c.Error(err)
 		}
-	}
+	}()
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
@@ -93,7 +93,8 @@ func {{$MethodInfo.Name}}(ctx context.Context, c *app.RequestContext) {
 
 	//请在这里实现参数检查 TODO params check
 	var resp {{$MethodInfo.ReturnTypeName}}
-	resp, err = service.{{$MethodInfo.Name}}(ctx, req)
+
+	//resp, err = service.{{$MethodInfo.Name}}(ctx, req)
 
 	c.{{.Serializer}}(consts.StatusOK, resp)
 }
