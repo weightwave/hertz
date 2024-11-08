@@ -79,13 +79,21 @@ func {{$MethodInfo.Name}}(ctx context.Context, c *app.RequestContext) {
 	var err error
 	{{if ne $MethodInfo.RequestTypeName "" -}}
 	var req {{$MethodInfo.RequestTypeName}}
+	defer func(){
+		if err != nil {
+			c.Error(err)
+		}
+	}
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
 	{{end}}
-	resp := new({{$MethodInfo.ReturnTypeName}})
+
+	//请在这里实现参数检查 TODO params check
+	var resp {{$MethodInfo.ResponseTypeName}}
+	resp, err = service.{{$MethodInfo.Name}}(ctx, req)
 
 	c.{{.Serializer}}(consts.StatusOK, resp)
 }
