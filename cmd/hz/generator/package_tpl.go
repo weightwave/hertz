@@ -891,6 +891,7 @@ package {{.PackageName}}
 import (
 	"context"
 	"fmt"
+	"sync"
 
 	"github.com/cloudwego/hertz/pkg/app/middlewares/client/sd"
 	"github.com/cloudwego/hertz/pkg/common/config"
