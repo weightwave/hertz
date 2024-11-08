@@ -24,8 +24,8 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/cloudwego/hertz/cmd/hz/util"
-	"github.com/cloudwego/hertz/cmd/hz/util/logs"
+	"github.com/weightwave/hertz/cmd/hz/util"
+	"github.com/weightwave/hertz/cmd/hz/util/logs"
 )
 
 type FilePathRenderInfo struct {

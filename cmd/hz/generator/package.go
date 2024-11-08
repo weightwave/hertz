@@ -24,9 +24,9 @@ import (
 	"reflect"
 	"text/template"
 
-	"github.com/cloudwego/hertz/cmd/hz/generator/model"
-	"github.com/cloudwego/hertz/cmd/hz/meta"
-	"github.com/cloudwego/hertz/cmd/hz/util"
+	"github.com/weightwave/hertz/cmd/hz/generator/model"
+	"github.com/weightwave/hertz/cmd/hz/meta"
+	"github.com/weightwave/hertz/cmd/hz/util"
 	"gopkg.in/yaml.v2"
 )
 

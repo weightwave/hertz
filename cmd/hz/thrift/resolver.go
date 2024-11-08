@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/cloudwego/hertz/cmd/hz/generator/model"
-	"github.com/cloudwego/hertz/cmd/hz/util"
 	"github.com/cloudwego/thriftgo/parser"
+	"github.com/weightwave/hertz/cmd/hz/generator/model"
+	"github.com/weightwave/hertz/cmd/hz/util"
 )
 
 var (

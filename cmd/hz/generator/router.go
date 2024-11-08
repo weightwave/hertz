@@ -28,7 +28,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/cloudwego/hertz/cmd/hz/util"
+	"github.com/weightwave/hertz/cmd/hz/util"
 )
 
 type Router struct {

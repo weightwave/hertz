@@ -2,7 +2,7 @@ syntax = "proto2";
 
 package psm;
 
-option go_package = "github.com/cloudwego/hertz/cmd/hz/test/hertz_model/psm";
+option go_package = "github.com/weightwave/hertz/cmd/hz/test/hertz_model/psm";
 
 import "api.proto";
 import "base.proto";

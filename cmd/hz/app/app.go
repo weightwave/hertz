@@ -23,14 +23,14 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/cloudwego/hertz/cmd/hz/config"
-	"github.com/cloudwego/hertz/cmd/hz/generator"
-	"github.com/cloudwego/hertz/cmd/hz/meta"
-	"github.com/cloudwego/hertz/cmd/hz/protobuf"
-	"github.com/cloudwego/hertz/cmd/hz/thrift"
-	"github.com/cloudwego/hertz/cmd/hz/util"
-	"github.com/cloudwego/hertz/cmd/hz/util/logs"
 	"github.com/urfave/cli/v2"
+	"github.com/weightwave/hertz/cmd/hz/config"
+	"github.com/weightwave/hertz/cmd/hz/generator"
+	"github.com/weightwave/hertz/cmd/hz/meta"
+	"github.com/weightwave/hertz/cmd/hz/protobuf"
+	"github.com/weightwave/hertz/cmd/hz/thrift"
+	"github.com/weightwave/hertz/cmd/hz/util"
+	"github.com/weightwave/hertz/cmd/hz/util/logs"
 )
 
 // global args. MUST fork it when use
@@ -154,6 +154,10 @@ func PluginMode() {
 }
 
 func Init() *cli.App {
+	fmt.Println("hz for weightwave!")
+	fmt.Println("hz for weightwave!")
+	fmt.Println("hz for weightwave!")
+
 	// flags
 	verboseFlag := cli.BoolFlag{Name: "verbose,vv", Usage: "turn on verbose mode", Destination: &globalArgs.Verbose}
 

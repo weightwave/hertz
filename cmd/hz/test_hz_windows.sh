@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 # const value define
-moduleName="github.com/cloudwego/hertz/cmd/hz/test"
+moduleName="github.com/weightwave/hertz/cmd/hz/test"
 curDir=`pwd`
 thriftIDL=$curDir"/testdata/thrift/psm.thrift"
 protobuf2IDL=$curDir"/testdata/protobuf2/psm/psm.proto"

@@ -4,7 +4,7 @@ package api;
 
 import "google/protobuf/descriptor.proto";
 
-option go_package = "github.com/cloudwego/hertz/cmd/hz/test/hertz_model/api";
+option go_package = "github.com/weightwave/hertz/cmd/hz/test/hertz_model/api";
 
 extend google.protobuf.FieldOptions {
   optional string raw_body = 50101;

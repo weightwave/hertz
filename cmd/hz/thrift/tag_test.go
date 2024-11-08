@@ -21,8 +21,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cloudwego/hertz/cmd/hz/config"
 	"github.com/cloudwego/thriftgo/plugin"
+	"github.com/weightwave/hertz/cmd/hz/config"
 )
 
 func TestInsertTag(t *testing.T) {

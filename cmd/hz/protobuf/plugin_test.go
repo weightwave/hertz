@@ -21,7 +21,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cloudwego/hertz/cmd/hz/meta"
+	"github.com/weightwave/hertz/cmd/hz/meta"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/pluginpb"
 )

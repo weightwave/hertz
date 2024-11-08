@@ -13,7 +13,7 @@
 // limitations under the License.
 //
 
-// Package "github.com/cloudwego/hertz/cmd/hz" contains packages for building the hz command line tool.
+// Package "github.com/weightwave/hertz/cmd/hz" contains packages for building the hz command line tool.
 // APIs exported by packages under this directory do not promise any backward
 // compatibility, so please do not rely on them.
 

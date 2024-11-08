@@ -27,7 +27,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/cloudwego/hertz/cmd/hz/meta"
+	"github.com/weightwave/hertz/cmd/hz/meta"
 )
 
 func GetGOPATH() (gopath string, err error) {

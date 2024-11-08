@@ -22,10 +22,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/cloudwego/hertz/cmd/hz/meta"
-	"github.com/cloudwego/hertz/cmd/hz/util"
-	"github.com/cloudwego/hertz/cmd/hz/util/logs"
 	"github.com/urfave/cli/v2"
+	"github.com/weightwave/hertz/cmd/hz/meta"
+	"github.com/weightwave/hertz/cmd/hz/util"
+	"github.com/weightwave/hertz/cmd/hz/util/logs"
 )
 
 type Argument struct {

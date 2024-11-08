@@ -24,9 +24,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cloudwego/hertz/cmd/hz/meta"
-	"github.com/cloudwego/hertz/cmd/hz/util/logs"
 	gv "github.com/hashicorp/go-version"
+	"github.com/weightwave/hertz/cmd/hz/meta"
+	"github.com/weightwave/hertz/cmd/hz/util/logs"
 )
 
 const ThriftgoMiniVersion = "v0.2.0"

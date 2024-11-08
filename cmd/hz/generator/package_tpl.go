@@ -65,8 +65,8 @@ package {{.PackageName}}
 import (
 	"context"
 
-	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/weightwave/hertz/pkg/app"
+	"github.com/weightwave/hertz/pkg/protocol/consts"
 
 {{- range $k, $v := .Imports}}
 	{{$k}} "{{$v.Package}}"
@@ -100,7 +100,7 @@ func {{$MethodInfo.Name}}(ctx context.Context, c *app.RequestContext) {
 package {{$.PackageName}}
 
 import (
-	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/weightwave/hertz/pkg/app/server"
 
     {{- range $k, $v := .HandlerPackages}}
         {{$k}} "{{$v}}"
@@ -149,7 +149,7 @@ func Register(r *server.Hertz) {
 package {{.PackageName}}
 
 import (
-	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/weightwave/hertz/pkg/app/server"
 	{{$.DepPkgAlias}} "{{$.DepPkg}}"
 )
 
@@ -173,7 +173,7 @@ func GeneratedRegister(r *server.Hertz){
 package {{$.PackageName}}
 
 import (
-	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/weightwave/hertz/pkg/app"
 )
 
 {{define "M"}}
@@ -204,8 +204,8 @@ func {{.HandlerMiddleware}}Mw() []app.HandlerFunc {
 package {{$.PackageName}}
 
 import (
-    "github.com/cloudwego/hertz/pkg/app/client"
-	"github.com/cloudwego/hertz/pkg/common/config"
+    "github.com/weightwave/hertz/pkg/app/client"
+	"github.com/weightwave/hertz/pkg/common/config"
 )
 
 type {{.ServiceName}}Client struct {
@@ -284,11 +284,11 @@ import (
 	"regexp"
 	"strings"
 
-	hertz_client "github.com/cloudwego/hertz/pkg/app/client"
-	"github.com/cloudwego/hertz/pkg/common/config"
-	"github.com/cloudwego/hertz/pkg/common/errors"
-	"github.com/cloudwego/hertz/pkg/protocol"
-	"github.com/cloudwego/hertz/pkg/protocol/client"
+	hertz_client "github.com/weightwave/hertz/pkg/app/client"
+	"github.com/weightwave/hertz/pkg/common/config"
+	"github.com/weightwave/hertz/pkg/common/errors"
+	"github.com/weightwave/hertz/pkg/protocol"
+	"github.com/weightwave/hertz/pkg/protocol/client"
 )
 
 type use interface {
@@ -892,8 +892,13 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cloudwego/hertz/pkg/common/config"
-	"github.com/cloudwego/hertz/pkg/protocol"
+	"github.com/weightwave/hertz/pkg/app/middlewares/client/sd"
+	"github.com/weightwave/hertz/pkg/common/config"
+	"github.com/weightwave/hertz/pkg/protocol"
+	hertztracing "github.com/hertz-contrib/obs-opentelemetry/tracing"
+	"github.com/weightwave/gocommon/nacosclient"
+	"github.com/weightwave/gocommon/envs"
+
 {{- range $k, $v := .Imports}}
 	{{$k}} "{{$v.Package}}"
 {{- end}}
@@ -902,6 +907,7 @@ import (
 // unused protection
 var (
 	_ = fmt.Formatter(nil)
+	nacosDisable bool
 )
 
 type Client interface {
@@ -915,7 +921,14 @@ type {{.ServiceName}}Client struct {
 }
 
 func New{{.ServiceName}}Client(hostUrl string, ops ...Option) (Client, error) {
-	opts := getOptions(append(ops, withHostUrl(hostUrl))...)
+	ops = append(ops,
+		withHostUrl(hostUrl),
+		WithHertzClientMiddleware(hertztracing.ClientMiddleware()),
+	)
+	if !nacosDisable {
+		ops = append(ops, WithHertzClientMiddleware(sd.Discovery(nacosclient.GetNacosResolver())))
+	}
+	opts := getOptions(ops...)
 	cli, err := newClient(opts)
 	if err != nil {
 		return nil, err
@@ -927,6 +940,9 @@ func New{{.ServiceName}}Client(hostUrl string, ops ...Option) (Client, error) {
 
 {{range $_, $MethodInfo := .ClientMethods}}
 func (s *{{$.ServiceName}}Client) {{$MethodInfo.Name}}(context context.Context, req *{{$MethodInfo.RequestTypeName}}, reqOpt ...config.RequestOption) (resp *{{$MethodInfo.ReturnTypeName}}, rawResponse *protocol.Response, err error) {
+	if !nacosDisable {
+		reqOpt = append(reqOpt, config.WithSD(true))
+	}
 	httpResp := &{{$MethodInfo.ReturnTypeName}}{}
 	ret, err := s.client.r().
 		setContext(context).
@@ -959,12 +975,7 @@ func (s *{{$.ServiceName}}Client) {{$MethodInfo.Name}}(context context.Context, 
 }
 {{end}}
 
-var defaultClient, _ = New{{.ServiceName}}Client("{{.BaseDomain}}")
-
-func ConfigDefaultClient(ops ...Option) (err error) {
-	defaultClient, err = New{{.ServiceName}}Client("{{.BaseDomain}}", ops...)
-	return
-}
+var defaultClient, _ = New{{.ServiceName}}Client("{{.BaseDomain}}-"+envs.GetEnv())
 
 {{range $_, $MethodInfo := .ClientMethods}}
 func {{$MethodInfo.Name}}(context context.Context, req *{{$MethodInfo.RequestTypeName}}, reqOpt ...config.RequestOption) (resp *{{$MethodInfo.ReturnTypeName}}, rawResponse *protocol.Response, err error) {

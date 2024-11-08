@@ -25,9 +25,9 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/cloudwego/hertz/cmd/hz/meta"
-	"github.com/cloudwego/hertz/cmd/hz/util"
-	"github.com/cloudwego/hertz/cmd/hz/util/logs"
+	"github.com/weightwave/hertz/cmd/hz/meta"
+	"github.com/weightwave/hertz/cmd/hz/util"
+	"github.com/weightwave/hertz/cmd/hz/util/logs"
 )
 
 var DefaultDelimiters = [2]string{"{{", "}}"}

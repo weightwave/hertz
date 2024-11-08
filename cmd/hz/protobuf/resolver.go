@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/cloudwego/hertz/cmd/hz/generator/model"
-	"github.com/cloudwego/hertz/cmd/hz/util"
 	"github.com/jhump/protoreflect/desc"
+	"github.com/weightwave/hertz/cmd/hz/generator/model"
+	"github.com/weightwave/hertz/cmd/hz/util"
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 

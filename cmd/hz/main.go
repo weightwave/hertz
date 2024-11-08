@@ -19,8 +19,8 @@ package main
 import (
 	"os"
 
-	"github.com/cloudwego/hertz/cmd/hz/app"
-	"github.com/cloudwego/hertz/cmd/hz/util/logs"
+	"github.com/weightwave/hertz/cmd/hz/app"
+	"github.com/weightwave/hertz/cmd/hz/util/logs"
 )
 
 func main() {
