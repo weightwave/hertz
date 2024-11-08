@@ -67,6 +67,7 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/weightwave/gocommon/logs"
 
 {{- range $k, $v := .Imports}}
 	{{$k}} "{{$v.Package}}"
@@ -81,6 +82,7 @@ func {{$MethodInfo.Name}}(ctx context.Context, c *app.RequestContext) {
 	var req {{$MethodInfo.RequestTypeName}}
 	defer func(){
 		if err != nil {
+			logs.CtxErrorf("{{.PackageName}} {{$MethodInfo.Name}} error: %+v", err)
 			c.Error(err)
 		}
 	}()
