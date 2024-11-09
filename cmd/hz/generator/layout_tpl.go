@@ -63,13 +63,35 @@ package main
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
+	hertztracing "github.com/hertz-contrib/obs-opentelemetry/tracing"
+	"github.com/hertz-contrib/pprof"
+	"github.com/weightwave/gocommon/hertz_mw"
+	"github.com/weightwave/gocommon/logs"
+	"github.com/weightwave/gocommon/nacosclient"
+	"github.com/weightwave/gocommon/otlp"
 )
 
 func main() {
-	h := server.Default()
+	p := otlp.Init()
+	defer p.Shutdown(context.Background())
+	tracer, cfg := hertztracing.NewServerTracer()
 
+	h := server.Default(nacosclient.AppendNacosConfig(tracer)...)
+	pprof.Register(h)
+
+	// Recovery 需要放在第一位，否则执行顺序有问题
+	h.Use(hertz_mw.Mws()...)
+	h.Use(hertztracing.ServerMiddleware(cfg))
+	
 	register(h)
 	h.Spin()
+	logs.Infof("Bye, Hertz!\n")
+}
+
+func init() {
+	//config.Init()
+	//dal.Init()
+	logs.Init()
 }
 			`,
 		},
@@ -120,7 +142,15 @@ _testmain.go
 /output
 *.local.yml
 dumped_hertz_remote_config.json
-		  `,
+.env*
+/tmp
+__debug*
+/log
+Makefile-xxc
+
+# Ignore any "log" folder at any level
+**/log/
+`,
 		},
 		{
 			Path: defaultHandlerDir + sp + "ping.go",

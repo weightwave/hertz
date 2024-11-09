@@ -93,10 +93,10 @@ func {{$MethodInfo.Name}}(ctx context.Context, c *app.RequestContext) {
 	}
 	{{end}}
 
-	//TODO params check
+	// TODO params check
 
 	var resp *{{$MethodInfo.ReturnTypeName}}
-	resp, err = service.{{$MethodInfo.Name}}(ctx, req)
+	// resp, err = service.{{$MethodInfo.Name}}(ctx, req)
 
 	c.{{.Serializer}}(consts.StatusOK, resp)
 }
