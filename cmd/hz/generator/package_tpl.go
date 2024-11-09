@@ -82,7 +82,7 @@ func {{$MethodInfo.Name}}(ctx context.Context, c *app.RequestContext) {
 	var req {{$MethodInfo.RequestTypeName}}
 	defer func(){
 		if err != nil {
-			logs.CtxErrorf(ctx, "{{$MethodInfo.Name}} error: %+v", err)
+			logs.CtxErrorf(ctx, "{{$MethodInfo.Name}} error: %s", err.Error())
 			c.Error(err)
 		}
 	}()
