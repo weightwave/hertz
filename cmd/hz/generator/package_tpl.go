@@ -96,7 +96,7 @@ func {{$MethodInfo.Name}}(ctx context.Context, c *app.RequestContext) {
 	// TODO params check
 
 	var resp *{{$MethodInfo.ReturnTypeName}}
-	// resp, err = _service.{{$MethodInfo.Name}}(ctx, req)
+	// resp, err = _service.{{$MethodInfo.Name}}(ctx, &req)
 	if err != nil {
 		return
 	}
