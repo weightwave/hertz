@@ -62,11 +62,13 @@ var defaultLayoutConfig = TemplateConfig{
 package main
 
 import (
-	"context"	
+	"context"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
+	serverconfig "github.com/cloudwego/hertz/pkg/common/config"
 	hertztracing "github.com/hertz-contrib/obs-opentelemetry/tracing"
 	"github.com/hertz-contrib/pprof"
+	"github.com/weightwave/gocommon/envs"
 	"github.com/weightwave/gocommon/hertz_mw"
 	"github.com/weightwave/gocommon/logs"
 	"github.com/weightwave/gocommon/nacosclient"
@@ -74,17 +76,25 @@ import (
 )
 
 func main() {
+	logs.Infof("Hello, Hertz!\n")
+	metrics := !envs.IsLocal()
 	p := otlp.Init()
 	defer p.Shutdown(context.Background())
-	tracer, cfg := hertztracing.NewServerTracer()
-
-	h := server.Default(nacosclient.AppendNacosConfig(tracer)...)
-	pprof.Register(h)
-
-	// Recovery 需要放在第一位，否则执行顺序有问题
+	var h *server.Hertz
+	var tracer serverconfig.Option
+	var cfg *hertztracing.Config
+	if metrics {
+		tracer, cfg = hertztracing.NewServerTracer()
+		h = server.Default(nacosclient.AppendNacosConfig(tracer)...)
+	} else {
+		h = server.Default(nacosclient.AppendNacosConfig()...)
+	}
+	if metrics {
+		h.Use(hertztracing.ServerMiddleware(cfg))
+	}
 	h.Use(hertz_mw.Mws()...)
-	h.Use(hertztracing.ServerMiddleware(cfg))
-	
+
+	pprof.Register(h)
 	register(h)
 	h.Spin()
 	logs.Infof("Bye, Hertz!\n")
