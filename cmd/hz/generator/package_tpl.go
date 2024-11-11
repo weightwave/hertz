@@ -101,6 +101,7 @@ func {{$MethodInfo.Name}}(ctx context.Context, c *app.RequestContext) {
 	if err != nil {
 		return
 	}
+	resp.Status = &base.ResponseStatus{}
 	c.{{.Serializer}}(consts.StatusOK, resp)
 }
 {{end}}
