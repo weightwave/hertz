@@ -924,7 +924,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/config"
 	"github.com/cloudwego/hertz/pkg/protocol"
 	"github.com/weightwave/gocommon/envs"
+	"github.com/weightwave/gocommon/errs"
 	"github.com/weightwave/gocommon/hertz_mw"
+	"github.com/weightwave/gocommon/logs"
 
 {{- range $k, $v := .Imports}}
 	{{$k}} "{{$v.Package}}"
