@@ -923,6 +923,7 @@ import (
 	hertztracing "github.com/hertz-contrib/obs-opentelemetry/tracing"
 	"github.com/weightwave/gocommon/nacosclient"
 	"github.com/weightwave/gocommon/envs"
+	"github.com/weightwave/gocommon/hertz_mw"
 
 {{- range $k, $v := .Imports}}
 	{{$k}} "{{$v.Package}}"
@@ -946,12 +947,8 @@ type {{.ServiceName}}Client struct {
 }
 
 func New{{.ServiceName}}Client(hostUrl string, ops ...Option) (Client, error) {
-	ops = append(ops,
-		withHostUrl(hostUrl),
-		WithHertzClientMiddleware(hertztracing.ClientMiddleware()),
-	)
-	if !nacosDisable {
-		ops = append(ops, WithHertzClientMiddleware(sd.Discovery(nacosclient.GetNacosResolver())))
+	for _, mw := range hertz_mw.ClientMws() {
+		ops = append(ops, WithHertzClientMiddleware(mw))
 	}
 	opts := getOptions(ops...)
 	cli, err := newClient(opts)
