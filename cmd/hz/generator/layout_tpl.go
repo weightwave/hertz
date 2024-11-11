@@ -78,12 +78,12 @@ import (
 func main() {
 	logs.Infof("Hello, Hertz!\n")
 	metrics := !envs.IsLocal()
-	p := otlp.Init()
-	defer p.Shutdown(context.Background())
 	var h *server.Hertz
 	var tracer serverconfig.Option
 	var cfg *hertztracing.Config
 	if metrics {
+		p := otlp.Init()
+		defer p.Shutdown(context.Background())
 		tracer, cfg = hertztracing.NewServerTracer()
 		h = server.Default(nacosclient.AppendNacosConfig(tracer)...)
 	} else {
