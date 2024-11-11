@@ -927,6 +927,7 @@ import (
 	"github.com/weightwave/gocommon/errs"
 	"github.com/weightwave/gocommon/hertz_mw"
 	"github.com/weightwave/gocommon/logs"
+	"github.com/weightwave/gocommon/json_utils"
 
 {{- range $k, $v := .Imports}}
 	{{$k}} "{{$v.Package}}"
@@ -966,7 +967,7 @@ func New{{.ServiceName}}Client(hostUrl string, ops ...Option) (Client, error) {
 
 {{range $_, $MethodInfo := .ClientMethods}}
 func (s *{{$.ServiceName}}Client) {{$MethodInfo.Name}}(context context.Context, req *{{$MethodInfo.RequestTypeName}}, reqOpt ...config.RequestOption) (resp *{{$MethodInfo.ReturnTypeName}}, rawResponse *protocol.Response, err error) {
-	logs.CtxDebugf(context, "{{$.ServiceName}} {{$MethodInfo.Name}} req: %s", utils.GetJsonStr(req))
+	logs.CtxDebugf(context, "{{$.ServiceName}} {{$MethodInfo.Name}} req: %s", json_utils.GetJsonStr(req))
 	if !nacosDisable {
 		reqOpt = append(reqOpt, config.WithSD(true))
 	}
@@ -1001,7 +1002,7 @@ func (s *{{$.ServiceName}}Client) {{$MethodInfo.Name}}(context context.Context, 
 	if resp.Status == nil {
 		return nil, nil, errs.New(500, "Invalid Response, No Status")
 	}
-	logs.CtxDebugf(context, "{{$.ServiceName}} {{$MethodInfo.Name}} resp: %s", utils.GetJsonStr(resp))
+	logs.CtxDebugf(context, "{{$.ServiceName}} {{$MethodInfo.Name}} resp: %s", json_utils.GetJsonStr(resp))
 	if resp.Status.Code != 0 {
 		return nil, nil, errs.New(int(resp.GetStatus().GetCode()), resp.GetStatus().GetMessage())
 	}
