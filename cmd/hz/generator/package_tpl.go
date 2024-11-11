@@ -947,6 +947,7 @@ func New{{.ServiceName}}Client(hostUrl string, ops ...Option) (Client, error) {
 	for _, mw := range hertz_mw.ClientMws() {
 		ops = append(ops, WithHertzClientMiddleware(mw))
 	}
+	ops = append(ops, withHostUrl(hostUrl))
 	opts := getOptions(ops...)
 	cli, err := newClient(opts)
 	if err != nil {
@@ -959,6 +960,7 @@ func New{{.ServiceName}}Client(hostUrl string, ops ...Option) (Client, error) {
 
 {{range $_, $MethodInfo := .ClientMethods}}
 func (s *{{$.ServiceName}}Client) {{$MethodInfo.Name}}(context context.Context, req *{{$MethodInfo.RequestTypeName}}, reqOpt ...config.RequestOption) (resp *{{$MethodInfo.ReturnTypeName}}, rawResponse *protocol.Response, err error) {
+	logs.CtxDebugf(context, "{{$.ServiceName}} {{$MethodInfo.Name}} req: %s", utils.GetJsonStr(req))
 	if !nacosDisable {
 		reqOpt = append(reqOpt, config.WithSD(true))
 	}
@@ -990,6 +992,10 @@ func (s *{{$.ServiceName}}Client) {{$MethodInfo.Name}}(context context.Context, 
     
 	resp = httpResp
 	rawResponse = ret.rawResponse
+	logs.CtxDebugf(context, "{{$.ServiceName}} {{$MethodInfo.Name}} resp: %s", utils.GetJsonStr(resp))
+	if resp.GetStatus().GetCode() != 0 {
+		return nil, nil, errs.New(int(resp.GetStatus().GetCode()), resp.GetStatus().GetMessage())
+	}
 	return resp, rawResponse, nil
 }
 {{end}}
