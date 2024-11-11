@@ -36,7 +36,7 @@ import (
 var (
 	jsonSnakeName             = false
 	unsetOmitempty            = false
-	protobufCamelJSONTagStyle = true
+	protobufCamelJSONTagStyle = false
 )
 
 func CheckTagOption(args *config.Argument) (ret []generator.Option) {
@@ -52,8 +52,8 @@ func CheckTagOption(args *config.Argument) (ret []generator.Option) {
 	if args.JSONEnumStr {
 		ret = append(ret, generator.OptionMarshalEnumToText)
 	}
-	if !args.ProtobufCamelJSONTag {
-		protobufCamelJSONTagStyle = false
+	if args.ProtobufCamelJSONTag {
+		protobufCamelJSONTagStyle = true
 	}
 	return ret
 }
