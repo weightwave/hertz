@@ -83,7 +83,7 @@ func {{$MethodInfo.Name}}(ctx context.Context, c *app.RequestContext) {
 	var req {{$MethodInfo.RequestTypeName}}
 	defer func(){
 		if err != nil {
-			logs.CtxErrorf(ctx, "%s", errs.Wrap(err, "{{$MethodInfo.Name}} error"))
+			logs.CtxErrorf(ctx, "%s", errs.Wrap(err, "{{$MethodInfo.Name}} error").Error())
 			c.Error(err)
 		}
 	}()
@@ -247,14 +247,23 @@ func {{.Name}}(ctx context.Context, c *app.RequestContext) {
 	var err error
 	{{if ne .RequestTypeName "" -}}
 	var req {{.RequestTypeName}}
+	defer func() {
+		if err != nil {
+			logs.CtxErrorf(ctx, "%s", errs.Wrap(err, "{{.Name}} error").Error())
+			c.Error(err)
+		}
+	}()
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
 	{{end}}
-	resp := new({{.ReturnTypeName}})
-
+	var resp *{{.ReturnTypeName}}
+	resp, err = service.{{.Name}}(ctx, req)
+	if err != nil {
+		return
+	}
 	c.{{.Serializer}}(consts.StatusOK, resp)
 }
 `,
