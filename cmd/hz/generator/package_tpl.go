@@ -1005,7 +1005,11 @@ var once sync.Once
 
 func Init(){
 	once.Do(func() {
-		defaultClient, _ = New{{.ServiceName}}Client("http://nacos-{{.BaseDomain}}-"+envs.GetEnv())
+		envSuffix := envs.GetEnv()
+		if envSuffix == "local" || envSuffix == "" {
+			envSuffix = "dev"
+		}
+		defaultClient, _ = New{{.ServiceName}}Client("http://nacos-" + {{.BaseDomain}}-" + envSuffix)
 	})
 }
 
