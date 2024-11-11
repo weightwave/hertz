@@ -917,11 +917,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/cloudwego/hertz/pkg/app/middlewares/client/sd"
 	"github.com/cloudwego/hertz/pkg/common/config"
 	"github.com/cloudwego/hertz/pkg/protocol"
-	hertztracing "github.com/hertz-contrib/obs-opentelemetry/tracing"
-	"github.com/weightwave/gocommon/nacosclient"
 	"github.com/weightwave/gocommon/envs"
 	"github.com/weightwave/gocommon/hertz_mw"
 
