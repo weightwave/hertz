@@ -992,8 +992,11 @@ func (s *{{$.ServiceName}}Client) {{$MethodInfo.Name}}(context context.Context, 
     
 	resp = httpResp
 	rawResponse = ret.rawResponse
+	if resp.Status == nil {
+		return nil, nil, errs.New(500, "Invalid Response, No Status")
+	}
 	logs.CtxDebugf(context, "{{$.ServiceName}} {{$MethodInfo.Name}} resp: %s", utils.GetJsonStr(resp))
-	if resp.GetStatus().GetCode() != 0 {
+	if resp.Status.Code != 0 {
 		return nil, nil, errs.New(int(resp.GetStatus().GetCode()), resp.GetStatus().GetMessage())
 	}
 	return resp, rawResponse, nil
