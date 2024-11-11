@@ -1009,7 +1009,7 @@ func Init(){
 		if envSuffix == "local" || envSuffix == "" {
 			envSuffix = "dev"
 		}
-		defaultClient, _ = New{{.ServiceName}}Client("http://nacos-" + {{.BaseDomain}}-" + envSuffix)
+		defaultClient, _ = New{{.ServiceName}}Client("http://nacos-{{.BaseDomain}}-" + envSuffix)
 	})
 }
 
