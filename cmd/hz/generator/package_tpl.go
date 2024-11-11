@@ -259,8 +259,9 @@ func {{.Name}}(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	{{end}}
+	//TODO params check
 	var resp *{{.ReturnTypeName}}
-	resp, err = service.{{.Name}}(ctx, req)
+	// resp, err = _service.{{.Name}}(ctx, req)
 	if err != nil {
 		return
 	}
