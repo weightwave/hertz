@@ -377,7 +377,7 @@ func (arg *Argument) GetRouterDir() (string, error) {
 
 func (arg *Argument) GetClientDir() (string, error) {
 	if arg.ClientDir == "" {
-		return "", nil
+		return "biz/hertz_client", nil
 	}
 	return util.RelativePath(arg.ClientDir)
 }
