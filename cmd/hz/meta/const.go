@@ -69,7 +69,7 @@ const (
 
 // Package Dir
 const (
-	ModelDir   = "biz/model"
+	ModelDir   = "model"
 	RouterDir  = "biz/router"
 	HandlerDir = "biz/handler"
 )
