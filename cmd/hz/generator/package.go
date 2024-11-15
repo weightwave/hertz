@@ -153,11 +153,11 @@ func (pkgGen *HttpPackageGenerator) Generate(pkg *HttpPackage) error {
 		return err
 	}
 	if len(pkg.Models) != 0 {
-		for _, m := range pkg.Models {
-			//if err := pkgGen.GenModel(m, pkgGen.NeedModel); err != nil {
-			//	return fmt.Errorf("generate model %s failed, err: %v", m.FilePath, err.Error())
-			//}
-		}
+		//for _, m := range pkg.Models {
+		//	if err := pkgGen.GenModel(m, pkgGen.NeedModel); err != nil {
+		//		return fmt.Errorf("generate model %s failed, err: %v", m.FilePath, err.Error())
+		//	}
+		//}
 	}
 
 	if pkgGen.CmdType == meta.CmdClient {
