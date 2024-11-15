@@ -149,14 +149,12 @@ func (pkgGen *HttpPackageGenerator) checkInited() (bool, error) {
 }
 
 func (pkgGen *HttpPackageGenerator) Generate(pkg *HttpPackage) error {
-	fmt.Println("skip model ~~~ use remote please")
-	return nil
 	if _, err := pkgGen.checkInited(); err != nil {
 		return err
 	}
 	if len(pkg.Models) != 0 {
 		for _, m := range pkg.Models {
-			if err := pkgGen.GenModel(m, pkgGen.NeedModel); err != nil {
+			if err := pkgGen.GenModel(m, false); err != nil {
 				return fmt.Errorf("generate model %s failed, err: %v", m.FilePath, err.Error())
 			}
 		}
