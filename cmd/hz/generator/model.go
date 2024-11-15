@@ -113,6 +113,7 @@ func (pkgGen *HttpPackageGenerator) LoadBackend(backend meta.Backend) error {
 }
 
 func (pkgGen *HttpPackageGenerator) GenModel(data *model.Model, gen bool) error {
+	return nil
 	if pkgGen.processedModels == nil {
 		pkgGen.processedModels = map[*model.Model]bool{}
 	}
