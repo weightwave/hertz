@@ -93,10 +93,10 @@ func NewArgument() *Argument {
 }
 
 func (arg *Argument) GetUse() string {
-	if arg.Use != "" {
+	if arg.Use == "" {
 		return "github.com/weightwave/hertz_gen/model"
 	}
-	return arg.OutDir
+	return arg.Use
 }
 
 // Parse initializes a new argument based on its own information
