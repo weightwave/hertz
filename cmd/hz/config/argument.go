@@ -89,8 +89,14 @@ func NewArgument() *Argument {
 		Excludes:      make([]string, 0, 4),
 		ProtocOptions: make([]string, 0, 4),
 		ThriftOptions: make([]string, 0, 4),
-		Use:           "github.com/weightwave/hertz_gen/model",
 	}
+}
+
+func (arg *Argument) GetUse() string {
+	if arg.Use != "" {
+		return "github.com/weightwave/hertz_gen/model"
+	}
+	return arg.OutDir
 }
 
 // Parse initializes a new argument based on its own information

@@ -181,7 +181,7 @@ func (plugin *Plugin) parseArgs(param string) (*config.Argument, error) {
 	}
 	plugin.OutDir = args.OutDir
 	plugin.PkgMap = args.OptPkgMap
-	plugin.UseDir = args.Use
+	plugin.UseDir = args.GetUse()
 	return args, nil
 }
 
@@ -612,7 +612,7 @@ func (plugin *Plugin) genHttpPackage(ast *descriptorpb.FileDescriptorProto, deps
 		HandlerDir: handlerDir,
 		RouterDir:  routerDir,
 		ModelDir:   modelDir,
-		UseDir:     args.Use,
+		UseDir:     args.GetUse(),
 		ClientDir:  clientDir,
 		TemplateGenerator: generator.TemplateGenerator{
 			OutputDir: args.OutDir,

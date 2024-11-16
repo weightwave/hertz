@@ -137,7 +137,7 @@ func (plugin *Plugin) Run() int {
 		HandlerDir: handlerDir,
 		RouterDir:  routerDir,
 		ModelDir:   modelDir,
-		UseDir:     args.Use,
+		UseDir:     args.GetUse(),
 		ClientDir:  clientDir,
 		TemplateGenerator: generator.TemplateGenerator{
 			OutputDir: args.OutDir,
@@ -165,7 +165,7 @@ func (plugin *Plugin) Run() int {
 		logs.Errorf("generate package failed: %s", err.Error())
 		return meta.PluginError
 	}
-	if len(args.Use) != 0 {
+	if len(args.GetUse()) != 0 {
 		err = sg.Persist()
 		if err != nil {
 			logs.Errorf("persist file failed within '-use' option: %s", err.Error())

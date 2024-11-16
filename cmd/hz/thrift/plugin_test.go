@@ -79,7 +79,7 @@ func TestRun(t *testing.T) {
 		HandlerDir: handlerDir,
 		RouterDir:  routerDir,
 		ModelDir:   modelDir,
-		UseDir:     args.Use,
+		UseDir:     args.GetUse(),
 		ClientDir:  clientDir,
 		TemplateGenerator: generator.TemplateGenerator{
 			OutputDir: args.OutDir,
