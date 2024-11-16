@@ -607,6 +607,7 @@ func (plugin *Plugin) genHttpPackage(ast *descriptorpb.FileDescriptorProto, deps
 	if err != nil {
 		return nil, err
 	}
+	modelDir = "asd"
 	sg := generator.HttpPackageGenerator{
 		ConfigPath: customPackageTemplate,
 		HandlerDir: handlerDir,

@@ -260,6 +260,8 @@ func Init() *cli.App {
 				&moduleFlag,
 				&outDirFlag,
 				&handlerDirFlag,
+				&modelDirFlag,
+				&clientDirFlag,
 				&useFlag,
 
 				&includesFlag,
