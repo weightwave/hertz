@@ -89,6 +89,7 @@ func NewArgument() *Argument {
 		Excludes:      make([]string, 0, 4),
 		ProtocOptions: make([]string, 0, 4),
 		ThriftOptions: make([]string, 0, 4),
+		Use:           "github.com/weightwave/hertz_gen",
 	}
 }
 
@@ -377,7 +378,7 @@ func (arg *Argument) GetRouterDir() (string, error) {
 
 func (arg *Argument) GetClientDir() (string, error) {
 	if arg.ClientDir == "" {
-		return "biz/hertz_client", nil
+		return "", nil
 	}
 	return util.RelativePath(arg.ClientDir)
 }
