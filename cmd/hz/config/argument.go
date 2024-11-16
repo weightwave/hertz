@@ -89,7 +89,7 @@ func NewArgument() *Argument {
 		Excludes:      make([]string, 0, 4),
 		ProtocOptions: make([]string, 0, 4),
 		ThriftOptions: make([]string, 0, 4),
-		Use:           "github.com/weightwave/hertz_gen",
+		Use:           "github.com/weightwave/hertz_gen/model",
 	}
 }
 
